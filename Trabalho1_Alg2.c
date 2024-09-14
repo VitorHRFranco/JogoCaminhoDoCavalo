@@ -104,7 +104,7 @@ int main(){
 
     posicao_inicialX = rand() % TAM;
     posicao_inicialY = rand() % TAM;
-    tabuleiro[posicao_inicialX][posicao_inicialY] = 2; /*Substitui a posicao do cavalo por 1*/
+    tabuleiro[posicao_inicialX][posicao_inicialY] = 2; /*Substitui a posicao do cavalo por 2*/
     P = (int**)&tabuleiro[posicao_inicialX][posicao_inicialY];
 
     printf("Tabuleiro inicial:\n");
