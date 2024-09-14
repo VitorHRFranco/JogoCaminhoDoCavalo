@@ -51,9 +51,10 @@ void imprimeMenu(){
 
 }
 
-void atualizaPosicao(int *ptrX, int *ptrY, int novoX, int novoY){
-    *ptrX = novoX;
-    *ptrY = novoY;
+void atualizaPosicao(int **P, int novoX, int novoY, int tabuleiro[TAM][TAM]){
+    **P = 0;  // Marca a posição anterior como visitada
+    *P = &tabuleiro[novoX][novoY];  // Atualiza o ponteiro para a nova posição
+    **P = 1;  // Marca a nova posição do cavalo
 }
 
 //Verificando se o movimento esta dentro dos limites do tabuleiro (coordenada entre 0 e 3 nos eixos x e y pois eh uma matriz 4x4); se a posição já não foi ocupada (posicao vazia, representada por '.');
@@ -95,7 +96,7 @@ int main(){
         printf("Tabuleiro atual:\n");
         imprimeTabuleiro(tabuleiro);
 
-        printf("Escolha um movimento: ");
+        printf("Escolha um movimento OU Digite 0 para Sair: ");
         scanf("%d", &opcao);
 
         if(validaMovimento(posicaoX, posicaoY, tabuleiro) == 0){
