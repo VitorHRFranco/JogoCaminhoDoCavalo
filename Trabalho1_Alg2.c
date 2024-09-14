@@ -1,4 +1,4 @@
-/*  Trabalho 1 - Algoritmos e Programa��o II - Ponteiros
+/*  Trabalho 1 - Algoritmos e Programacao II - Ponteiros
 
     ==========="O Jogo do Passeio do Cavalo"============
 
@@ -13,14 +13,14 @@ a. O tabuleiro deve ser impresso para o usuario.(feito)
 b. O tabuleiro deve ser uma matriz 4x4.(feito)
 ii. Os possiveis movimentos que o cavalo pode fazer deve aparecer em um menu e
 apenas os movimentos possiveis. (feito)
-a. O usuario deve escolher um dos movimentos do menu.
-b. O cavalo nao pode passar os limites do tabuleiro. 
+a. O usuario deve escolher um dos movimentos do menu. (feito)
+b. O cavalo nao pode passar os limites do tabuleiro. (feito)
 c. Onde o cavalo ja passou deve ser marcado como uma posicao que nao
-pode ser explorada.
-d. O tabuleiro deve ser impresso para o usuario a cada movimento feito.
-e. Um ponteiro P deve ser utilizado para guardar a posicao do cavalo.
+pode ser explorada. (feito)
+d. O tabuleiro deve ser impresso para o usuario a cada movimento feito. (feito)
+e. Um ponteiro P deve ser utilizado para guardar a posicao do cavalo. (feito)
 f. Toda movimentacao do cavalo deve ser feita por aritmetica de ponteiro e
-pelo ponteiro P. O trabalho que nao atender esses requisitos tera nota zero.
+pelo ponteiro P. O trabalho que nao atender esses requisitos tera nota zero. (feito)
 iii. O jogo finaliza quando:
 a. O usuario nao tiver mais movimento para fazer.
 b. O usuario ganha quando todas as posicoes do tabuleiro estiverem
@@ -30,11 +30,11 @@ aberto.
 d. No fim do jogo deve ser impresso ao usuario se ele perdeu ou ganhou.
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
+#include <windows.h> 
 
 #define TAM 4
 
@@ -66,11 +66,11 @@ int validaMovimento(int x, int y, int novoX, int novoY, int tabuleiro[TAM][TAM])
                 }
             }
         }
-
     return 0;
 }
 
 void imprimeMenu(int tabuleiro[TAM][TAM], int x, int y){
+
     for (int i = 0; i < 8; i++) {
         int novoX = x + movimentos[i][0];
         int novoY = y + movimentos[i][1];
@@ -81,9 +81,9 @@ void imprimeMenu(int tabuleiro[TAM][TAM], int x, int y){
 }
 
 void atualizaPosicao(int **P, int novoX, int novoY, int tabuleiro[TAM][TAM]){
-    **P = 0;  // Marca a posição anterior como visitada
+    **P = 1;  // Marca a posição anterior como visitada
     *P = &tabuleiro[novoX][novoY];  // Atualiza o ponteiro para a nova posição
-    **P = 1;  // Marca a nova posição do cavalo
+    **P = 2;  // Marca a nova posição do cavalo
 }
 
 int main(){
@@ -104,7 +104,7 @@ int main(){
 
     posicao_inicialX = rand() % TAM;
     posicao_inicialY = rand() % TAM;
-    tabuleiro[posicao_inicialX][posicao_inicialY] = 1; /*Substitui a posicao do cavalo por 1*/
+    tabuleiro[posicao_inicialX][posicao_inicialY] = 2; /*Substitui a posicao do cavalo por 1*/
     P = (int**)&tabuleiro[posicao_inicialX][posicao_inicialY];
 
     printf("Tabuleiro inicial:\n");
@@ -114,7 +114,7 @@ int main(){
         printf("Tabuleiro atual:\n");
         imprimeTabuleiro(tabuleiro);
 
-        printf("Movimentos possíveis:\n");
+        printf("Movimentos possiveis:\n");
         imprimeMenu(tabuleiro, posicao_inicialX, posicao_inicialY);
 
         printf("Escolher movimento (1) ou sair (0):\n");
@@ -127,9 +127,10 @@ int main(){
             scanf("%d %d", &posicaoX, &posicaoY);
 
             if (validaMovimento(posicao_inicialX, posicao_inicialY, posicaoX, posicaoY, tabuleiro) == 0) {
-            printf("Movimento inválido.\n");
-            }   else {
-            atualizaPosicao(P, posicaoX, posicaoY, tabuleiro);
+                printf("Movimento invalido.\n");
+                Sleep(2000); //espera 2 segundos
+            } else {
+            atualizaPosicao(&P, posicaoX, posicaoY, tabuleiro);
             posicao_inicialX = posicaoX;
             posicao_inicialY = posicaoY;
             }
