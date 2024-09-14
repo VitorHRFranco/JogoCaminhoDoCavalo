@@ -12,9 +12,9 @@ i. Ao iniciar o programa o cavalo ira iniciar em uma posicao aleatoria.(feito)
 a. O tabuleiro deve ser impresso para o usuario.(feito)
 b. O tabuleiro deve ser uma matriz 4x4.(feito)
 ii. Os possiveis movimentos que o cavalo pode fazer deve aparecer em um menu e
-apenas os movimentos possiveis.
+apenas os movimentos possiveis. (feito)
 a. O usuario deve escolher um dos movimentos do menu.
-b. O cavalo nao pode passar os limites do tabuleiro.
+b. O cavalo nao pode passar os limites do tabuleiro. 
 c. Onde o cavalo ja passou deve ser marcado como uma posicao que nao
 pode ser explorada.
 d. O tabuleiro deve ser impresso para o usuario a cada movimento feito.
@@ -47,8 +47,37 @@ void imprimeTabuleiro(int tabuleiro[TAM][TAM]){
         }
 }
 
-void imprimeMenu(){
+// Movimentos possíveis do cavalo (Anda em L)
+int movimentos[8][2] = {
+    {2, 1}, {2, -1}, //Lado Direito
+    {-2, 1}, {-2, -1}, //Lado Esquerdo
+    {1, 2}, {-1, 2}, //Lado Inferior
+    {-1, -2}, {1, -2} //Lado Superior
+};
 
+
+int validaMovimento(int x, int y, int novoX, int novoY, int tabuleiro[TAM][TAM]){
+     if (novoX >= 0 && novoX < TAM && novoY >= 0 && novoY < TAM && tabuleiro[novoX][novoY] == 0) {
+        for (int i = 0; i < 8; i++) {
+            int dx = movimentos[i][0];
+            int dy = movimentos[i][1];
+            if (x + dx == novoX && y + dy == novoY) {
+                    return 1;
+                }
+            }
+        }
+
+    return 0;
+}
+
+void imprimeMenu(int tabuleiro[TAM][TAM], int x, int y){
+    for (int i = 0; i < 8; i++) {
+        int novoX = x + movimentos[i][0];
+        int novoY = y + movimentos[i][1];
+        if (validaMovimento(x, y, novoX, novoY, tabuleiro)) {
+            printf("%d , %d\n", novoX, novoY);
+        }
+    }
 }
 
 void atualizaPosicao(int **P, int novoX, int novoY, int tabuleiro[TAM][TAM]){
@@ -56,17 +85,6 @@ void atualizaPosicao(int **P, int novoX, int novoY, int tabuleiro[TAM][TAM]){
     *P = &tabuleiro[novoX][novoY];  // Atualiza o ponteiro para a nova posição
     **P = 1;  // Marca a nova posição do cavalo
 }
-
-//Verificando se o movimento esta dentro dos limites do tabuleiro (coordenada entre 0 e 3 nos eixos x e y pois eh uma matriz 4x4); se a posição já não foi ocupada (posicao vazia, representada por '.');
-//Retorna o quando o movimento for invalido;
-
-int validaMovimento(int x, int y, int tabuleiro[TAM][TAM]){
-    if (x >= 0 && x <= 3 && y >= 0 && y <= 3 && tabuleiro[x][y] == '.') {
-        return 1;
-    }
-    return 0;
-}
-
 
 int main(){
 
@@ -84,8 +102,8 @@ int main(){
         }
     }
 
-    posicao_inicialX = rand() % 4;
-    posicao_inicialY = rand() % 4;
+    posicao_inicialX = rand() % TAM;
+    posicao_inicialY = rand() % TAM;
     tabuleiro[posicao_inicialX][posicao_inicialY] = 1; /*Substitui a posicao do cavalo por 1*/
     P = (int**)&tabuleiro[posicao_inicialX][posicao_inicialY];
 
@@ -96,21 +114,32 @@ int main(){
         printf("Tabuleiro atual:\n");
         imprimeTabuleiro(tabuleiro);
 
-        printf("Escolha um movimento OU Digite 0 para Sair: ");
+        printf("Movimentos possíveis:\n");
+        imprimeMenu(tabuleiro, posicao_inicialX, posicao_inicialY);
+
+        printf("Escolher movimento (1) ou sair (0):\n");
         scanf("%d", &opcao);
 
-        if(validaMovimento(posicaoX, posicaoY, tabuleiro) == 0){
-        printf("Movimento inválido.");
-        } else {
-            atualizaPosicao(&P, posicaoX, posicaoY, tabuleiro);
+        if(opcao == 0){
+            break;
+        } else if (opcao == 1) {
+            printf("Escolha um movimento (x y):\n");
+            scanf("%d %d", &posicaoX, &posicaoY);
 
+            if (validaMovimento(posicao_inicialX, posicao_inicialY, posicaoX, posicaoY, tabuleiro) == 0) {
+            printf("Movimento inválido.\n");
+            }   else {
+            atualizaPosicao(P, posicaoX, posicaoY, tabuleiro);
             posicao_inicialX = posicaoX;
             posicao_inicialY = posicaoY;
+            }
+        } else {
+            printf("Opção inválida.\n");
         }
 
         system("cls"); //limpa o terminal antes da proxima ação
 
-    } while (opcao != '\0'); // Sair do jogo quando jogador digitar 0;
+    } while (1); 
 
     return 0;
 
